@@ -103,6 +103,9 @@ This option controls how unions are rendered. It supports both the `typing.Union
 > [!NOTE]
 > Runtime use of the `|` operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la [PEP 563](https://peps.python.org/pep-0563/) with `from __future__ import__annotations__`. Support for the `|` operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.
 
+> [!NOTE]
+> In Python 3.14, the `typing.Union` special form and the `types.Union` type (produced by the `|` operator) have been [unified into a single implementation](https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union). This means that both will always be rendered with the `|` operator when using `as_given`, as their created instances are no longer distinguishable.
+
 > [!IMPORTANT]
 > **Limitations:** Python automatically flattens unions when evaluating them at runtime. Since typenames uses runtime type objects, it will only see the flattened result and not know if your original input was nested. Furthermore, any mixing of `|` operator syntax and any typing module types will result in a `typing.Union` union, so `as_given` will always render such inputs with `typing.Union`.
 
@@ -118,6 +121,9 @@ This option controls how optional types are rendered. It supports both the `typi
 
 > [!NOTE]
 > Runtime use of the `|` operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la [PEP 563](https://peps.python.org/pep-0563/) with `from __future__ import__annotations__`. Support for the `|` operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.
+
+> [!NOTE]
+> In Python 3.14, the `typing.Optional` special form no longer produces a `typing.Optional` type object; instead, it produces a `Union` object. Additionally, the `typing.Union` special form and the `types.Union` type (produced by the `|` operator) have been [unified into a single implementation](https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union). This means that all syntaxes for optional types will be rendered with the `|` operator when using `as_given`, as their created instances are no longer distinguishable.
 
 > [!IMPORTANT]
 > **Limitations:**
