@@ -379,7 +379,13 @@ def typenames(tp: _TypeForm, config: Optional[TypenamesConfig] = None, **kwargs:
 
 def is_union_special_form(tp: _TypeForm) -> bool:
     """Check if type annotation is a union and uses the typing.Union special form."""
-    return get_origin(tp) is typing.Union
+    if sys.version_info < (3, 14):
+        return get_origin(tp) is typing.Union
+    else:
+        # In Python 3.14, types.UnionType and the typing.Union special form were unified
+        # The old-style typing.Union special form doesn't really exist anymore
+        # https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union
+        return False
 
 
 def is_union_or_operator(tp: _TypeForm) -> bool:
@@ -419,7 +425,6 @@ STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPPING = {
     collections.abc.MutableMapping: typing.MutableMapping,
     collections.abc.Sequence: typing.Sequence,
     collections.abc.MutableSequence: typing.MutableSequence,
-    collections.abc.ByteString: typing.ByteString,
     collections.abc.MappingView: typing.MappingView,
     collections.abc.KeysView: typing.KeysView,
     collections.abc.ItemsView: typing.ItemsView,
@@ -433,6 +438,10 @@ STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPPING = {
 }
 """Mapping from standard collection types that support use as a generic type starting in
 Python 3.9 (PEP 585) to their associated typing module generic alias."""
+
+if sys.version_info < (3, 14):
+    # ByteString is deprecated in 3.12 and removed in 3.14
+    STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPPING[collections.abc.ByteString] = typing.ByteString
 
 STANDARD_COLLECTION_CLASSES = frozenset(STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPPING.keys())
 """Frozenset of standard collection classes that support use as a generic type starting in

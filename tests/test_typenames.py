@@ -51,12 +51,9 @@ cases = [
     (int, "int"),
     (typing.List[int], "list[int]"),
     (typing.Tuple[str, int], "tuple[str, int]"),
-    (typing.Optional[int], "Optional[int]"),
     (MyClass, "tests.test_typenames.MyClass"),
     (OuterClass.InnerClass, "tests.test_typenames.OuterClass.InnerClass"),
     (typing.List[MyClass], "list[tests.test_typenames.MyClass]"),
-    (typing.Optional[typing.List[MyClass]], "Optional[list[tests.test_typenames.MyClass]]"),
-    (typing.Union[float, int], "Union[float, int]"),
     (typing.Dict[str, int], "dict[str, int]"),
     (typing.Any, "Any"),
     (typing.Dict[str, typing.Any], "dict[str, Any]"),
@@ -87,10 +84,35 @@ cases = [
     # typing.Annotated is available in Python 3.9, or backported with typing_extensions
     (Annotated[str, "some metadata"], "str"),
     (Annotated[str, object()], "str"),
-    (typing.Optional[Annotated[str, "some metadata"]], "Optional[str]"),
-    (typing.Optional[Annotated[str, object()]], "Optional[str]"),
 ]
 
+if sys.version_info < (3, 14):
+    # Should preserve typing.Union and typing.Optional special forms
+    cases.extend(
+        [
+            (
+                typing.Optional[typing.List[MyClass]],
+                "Optional[list[tests.test_typenames.MyClass]]",
+            ),
+            (typing.Union[float, int], "Union[float, int]"),
+            (typing.Optional[int], "Optional[int]"),
+            (typing.Optional[Annotated[str, "some metadata"]], "Optional[str]"),
+            (typing.Optional[Annotated[str, object()]], "Optional[str]"),
+        ]
+    )
+else:
+    cases.extend(
+        [
+            (
+                typing.Optional[typing.List[MyClass]],
+                "list[tests.test_typenames.MyClass] | None",
+            ),
+            (typing.Union[float, int], "float | int"),
+            (typing.Optional[int], "int | None"),
+            (typing.Optional[Annotated[str, "some metadata"]], "str | None"),
+            (typing.Optional[Annotated[str, object()]], "str | None"),
+        ]
+    )
 
 if sys.version_info >= (3, 10):
     # Python 3.10 adds union syntax with the | operator (bitwise or),
@@ -213,17 +235,30 @@ def test_optional_syntax_union_special_form():
 def test_optional_multiple_params():
     """Test case that a type annotation resolves to the optional case but with multiple non-None
     parameters."""
-    assert typenames(typing.Optional[typing.Union[int, str]]) == "Optional[Union[int, str]]"
+    if sys.version_info < (3, 14):
+        assert typenames(typing.Optional[typing.Union[int, str]]) == "Optional[Union[int, str]]"
+    else:
+        assert typenames(typing.Optional[typing.Union[int, str]]) == "int | str | None"
 
     if sys.version_info >= (3, 10):
-        assert (
-            typenames(int | str | None, optional_syntax="optional_special_form")
-            == "Optional[Union[int, str]]"
-        )
-        assert (
-            typenames(int | None | str, optional_syntax="optional_special_form")
-            == "Optional[Union[int, str]]"
-        )
+        if sys.version_info < (3, 14):
+            assert (
+                typenames(int | str | None, optional_syntax="optional_special_form")
+                == "Optional[Union[int, str]]"
+            )
+            assert (
+                typenames(int | None | str, optional_syntax="optional_special_form")
+                == "Optional[Union[int, str]]"
+            )
+        else:
+            assert (
+                typenames(int | str | None, optional_syntax="optional_special_form")
+                == "Optional[int | str]"
+            )
+            assert (
+                typenames(int | None | str, optional_syntax="optional_special_form")
+                == "Optional[int | str]"
+            )
 
         # union_syntax='or_operator'
         assert (
@@ -263,10 +298,16 @@ def test_annotated_include_extras():
 def test_node_repr():
     assert repr(parse_type_tree(int)) == "<TypeNode <class 'int'>>"
     assert repr(parse_type_tree(typing.Any)) == "<TypeNode typing.Any>"
-    assert (
-        repr(parse_type_tree(typing.Optional[int]))
-        == "<GenericNode typing.Union[<TypeNode <class 'int'>>, <TypeNode <class 'NoneType'>>]>"
-    )
+    if sys.version_info < (3, 14):
+        assert repr(parse_type_tree(typing.Optional[int])) == (
+            "<GenericNode typing.Union[<TypeNode <class 'int'>>, <TypeNode <class 'NoneType'>>]>"
+        )
+    else:
+        assert repr(parse_type_tree(typing.Optional[int])) == (
+            "<GenericNode <class 'typing.Union'>["
+            "<TypeNode <class 'int'>>, <TypeNode <class 'NoneType'>>"
+            "]>"
+        )
     assert (
         repr(parse_type_tree(typing.Literal["a", "b"]))
         == "<GenericNode typing.Literal[<LiteralNode 'a'>, <LiteralNode 'b'>]>"
@@ -292,7 +333,10 @@ is_union_special_form_cases = [
 )
 def test_is_union_special_form(case):
     """Test that is_union_special_form correctly identifies if using typing.Union."""
-    assert is_union_special_form(case[0]) == case[1]
+    if sys.version_info < (3, 14):
+        assert is_union_special_form(case[0]) == case[1]
+    else:
+        assert is_union_special_form(case[0]) is False
 
 
 @pytest.mark.parametrize(
@@ -302,7 +346,10 @@ def test_is_union_special_form(case):
 )
 def test_is_union_or_operator_for_typing_alias_cases(case):
     """Test that is_union_or_operator correctly returns False for all typing.Union test cases."""
-    assert is_union_or_operator(case[0]) is False
+    if sys.version_info < (3, 14):
+        assert is_union_or_operator(case[0]) is False
+    else:
+        assert is_union_or_operator(case[0]) == case[1]
 
 
 if sys.version_info >= (3, 10):
