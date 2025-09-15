@@ -143,6 +143,14 @@ def test_typenames(case):
     assert typenames(case[0]) == case[1]
 
 
+def test_forward_ref_spurious_module():
+    """Regression test that forward references should not spuriously include typing or
+    annotationlib as a module name."""
+    rendered = typenames(typing.List["int"], remove_modules=[])
+    assert "typing.int" not in rendered
+    assert "annotationlib.int" not in rendered
+
+
 def test_remove_modules():
     # Simulate a class from another module
     class OtherModuleClass:

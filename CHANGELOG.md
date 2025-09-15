@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.0 (Unreleased)
+
+- Adds support for Python 3.14.
+- Fixed bug where forward references would have `typing` or `annotationlib` spuriously prepended as a module in certain cases.
+
 ## v2.0.0 (2025-04-21)
 
 - Changed the default for [`standard_collection_syntax`](./README.md#standard-collection-syntax-standard_collection_syntax) from `"as_given"` to `"standard_class"`. This change is intended to encourage the use of the standard collection syntax, since all currently supported Python versions support it and the typing module aliases are [deprecated](https://docs.python.org/3/library/typing.html#deprecated-aliases).
