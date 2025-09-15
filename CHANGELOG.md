@@ -1,8 +1,8 @@
 # Changelog
 
-## v2.1.0 (Unreleased)
+## v2.1.0 (2025-09-15)
 
-- Adds support for Python 3.14.
+- Added support for Python 3.14.
 - Fixed bug where forward references would have `typing` or `annotationlib` spuriously prepended as a module in certain cases.
 
 ## v2.0.0 (2025-04-21)
