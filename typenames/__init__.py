@@ -151,6 +151,7 @@ class TypeNode(BaseNode):
                 module_prefix = module + dot
             else:
                 type_name = forward_arg
+                module_prefix = ""  # ForwardRef will have module annotationlib
         else:
             type_name = getattr(self.tp, "__qualname__", repr(self.tp))
         for pattern in self.config.remove_modules_patterns:

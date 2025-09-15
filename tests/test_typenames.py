@@ -62,6 +62,7 @@ cases = [
     (typing.Callable[[int, float], str], "Callable[[int, float], str]"),
     (MyGeneric[int], "tests.test_typenames.MyGeneric[int]"),
     (MyEnum, "tests.test_typenames.MyEnum"),
+    # Forward references
     (typing.List["int"], "list[int]"),
     (typing.List["typing.Any"], "list[Any]"),
     (typing.List["enum.Enum"], "list[enum.Enum]"),
