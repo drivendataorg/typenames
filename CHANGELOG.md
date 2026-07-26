@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.1 (Unreleased)
+
+- Fixed incorrect `__version__` value.
+
 ## v2.1.0 (2025-09-15)
 
 - Added support for Python 3.14.

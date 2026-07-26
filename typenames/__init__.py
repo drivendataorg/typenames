@@ -3,13 +3,14 @@ import collections
 import contextlib
 import dataclasses
 from enum import Enum
+import importlib.metadata
 import re
 import sys
 import types
 import typing
 from typing import Annotated, Any, List, Optional, Union, get_args, get_origin
 
-__version__ = "1.3.0"
+__version__ = importlib.metadata.version("typenames")
 
 OR_OPERATOR_SUPPORTED = sys.version_info >= (3, 10)
 """Flag for whether PEP 604's | operator (bitwise or) between types is supported."""
