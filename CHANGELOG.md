@@ -1,7 +1,9 @@
 # Changelog
 
-## v2.1.1 (Unreleased)
+## v2.2.0 (Unreleased)
 
+- Added explicit handling of [PEP 695](https://peps.python.org/pep-0695/) type aliases (`type X = ...`, `typing.TypeAliasType`). Rendering was already correct by accident (via a `repr()` fallback); it is now deliberate and tested. ([Issue #19](https://github.com/drivendataorg/typenames/issues/19))
+- Added `is_type_alias_type` predicate function. ([Issue #19](https://github.com/drivendataorg/typenames/issues/19))
 - Fixed incorrect `__version__` value.
 
 ## v2.1.0 (2025-09-15)

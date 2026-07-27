@@ -2155,7 +2155,7 @@ wheels = [
 
 [[package]]
 name = "typenames"
-version = "2.1.1"
+version = "2.2.0"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -2199,6 +2199,7 @@ tests = [
     { name = "coverage" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "typing-extensions" },
 ]
 typecheck = [
     { name = "mypy" },
@@ -2240,6 +2241,7 @@ tests = [
     { name = "coverage" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "typing-extensions" },
 ]
 typecheck = [{ name = "mypy" }]
 

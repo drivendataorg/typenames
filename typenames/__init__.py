@@ -25,6 +25,24 @@ else:
     _TypeForm = typing.TypeVar("_TypeForm", bound=typing.Union[type, object])
 
 
+# TypeAliasType for PEP 695 type aliases
+_TYPE_ALIAS_TYPES: tuple[type, ...] = ()
+if sys.version_info >= (3, 12):
+    from typing import TypeAliasType
+
+    _TYPE_ALIAS_TYPES += (TypeAliasType,)
+try:
+    # typing_extensions.TypeAliasType is a distinct class from typing.TypeAliasType even on
+    # Python 3.12+ (it is not simply re-exported), so both are checked when typing_extensions
+    # is installed: a library targeting multiple Python versions may construct aliases via
+    # typing_extensions.TypeAliasType directly rather than the `type` statement.
+    from typing_extensions import TypeAliasType as _TypingExtensionsTypeAliasType
+
+    _TYPE_ALIAS_TYPES += (_TypingExtensionsTypeAliasType,)
+except ImportError:
+    pass
+
+
 class UnionSyntax(str, Enum):
     """Enum for union syntax options. See "Union Syntax" section of README for documentation."""
 
@@ -155,6 +173,8 @@ class TypeNode(BaseNode):
                 # ForwardRef object will have __module__ of typing (<3.14) or annotationlib (3.14+)
                 # This is not the module of the actual type, so we blank it out
                 module_prefix = ""
+        elif is_type_alias_type(self.tp):
+            type_name = self.tp.__name__
         else:
             type_name = getattr(self.tp, "__qualname__", repr(self.tp))
         for pattern in self.config.remove_modules_patterns:
@@ -191,7 +211,7 @@ class GenericNode(BaseNode):
                 else:
                     origin_module_prefix = "typing."
                     origin_name = "Optional"
-                    arg_nodes = [a for a in arg_nodes if a.tp is not type(None)]
+                    arg_nodes = [a for a in arg_nodes if not a.is_none_type]
                     if len(arg_nodes) > 1:
                         # typing.Optional is only valid for a single parameter,
                         # need to use a union inside
@@ -218,7 +238,7 @@ class GenericNode(BaseNode):
             if is_optional and self.config.optional_syntax == OptionalSyntax.OPTIONAL_SPECIAL_FORM:
                 origin_module_prefix = "typing."
                 origin_name = "Optional"
-                arg_nodes = [a for a in arg_nodes if a.tp is not type(None)]
+                arg_nodes = [a for a in arg_nodes if not a.is_none_type]
                 if len(arg_nodes) > 1:
                     # typing.Optional is only valid for a single parameter,
                     # need to use a union inside
@@ -471,3 +491,11 @@ def is_typing_module_collection_alias(tp: type) -> bool:
 def is_annotated_special_form(tp: type) -> bool:
     """Check if type annotation is the typing.Annotated special form."""
     return get_origin(tp) is Annotated
+
+
+def is_type_alias_type(tp: Any) -> bool:
+    """Check if type annotation is a PEP 695 type alias (typing.TypeAliasType), e.g., one
+    created with the `type` statement. Does not match a subscripted generic type alias, e.g.,
+    `Gen[int]` for `type Gen[T] = list[T]`, since that is a types.GenericAlias whose origin is
+    the TypeAliasType."""
+    return isinstance(tp, _TYPE_ALIAS_TYPES)

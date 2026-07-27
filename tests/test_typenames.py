@@ -12,12 +12,16 @@ from typenames import (
     TypenamesConfig,
     is_annotated_special_form,
     is_standard_collection_type_alias,
+    is_type_alias_type,
     is_typing_module_collection_alias,
     is_union_or_operator,
     is_union_special_form,
     parse_type_tree,
     typenames,
 )
+
+if sys.version_info >= (3, 12):
+    from tests import type_statement_fixtures
 
 T = typing.TypeVar("T")
 
@@ -134,6 +138,22 @@ if sys.version_info >= (3, 11):
             (typing.LiteralString, "LiteralString"),
             (typing.Never, "Never"),
             (typing.Self, "Self"),
+        ]
+    )
+
+if sys.version_info >= (3, 12):
+    # Python 3.12 adds the `type` statement (PEP 695, TypeAliasType)
+    cases.extend(
+        [
+            (type_statement_fixtures.Simple, "tests.type_statement_fixtures.Simple"),
+            (type_statement_fixtures.Gen, "tests.type_statement_fixtures.Gen"),
+            (type_statement_fixtures.Gen[int], "tests.type_statement_fixtures.Gen[int]"),
+            (
+                list[type_statement_fixtures.Simple],
+                "list[tests.type_statement_fixtures.Simple]",
+            ),
+            # Recursive alias renders fine because rendering never reads __value__
+            (type_statement_fixtures.JSON, "tests.type_statement_fixtures.JSON"),
         ]
     )
 
@@ -473,3 +493,57 @@ def test_nested_collection_types_nested_both():
 def test_annotated():
     assert is_annotated_special_form(Annotated[str, "some metadata"]) is True
     assert is_annotated_special_form(Annotated[str, object()]) is True
+
+
+def test_type_alias_type_typing_extensions_constructor():
+    """Regression test that an alias constructed directly via typing_extensions.TypeAliasType
+    is recognized and rendered by name, on every supported Python version. This is distinct
+    from `type_statement_fixtures`, which requires Python 3.12+ for the `type` statement:
+    typing_extensions.TypeAliasType remains a *different* class from typing.TypeAliasType even
+    on 3.12+ (it is not re-exported), so a library that constructs aliases this way to support
+    multiple Python versions uniformly must still be recognized there."""
+    import typing_extensions
+
+    alias = typing_extensions.TypeAliasType("ConstructedAlias", list[int])
+    assert is_type_alias_type(alias) is True
+    assert typenames(alias) == "tests.test_typenames.ConstructedAlias"
+
+
+if sys.version_info >= (3, 12):
+    is_type_alias_type_cases = [
+        (type_statement_fixtures.Simple, True),
+        (type_statement_fixtures.Gen, True),
+        (type_statement_fixtures.Gen[int], False),
+        (int, False),
+        (typing.List[int], False),
+        (list[int], False),
+        (MyClass, False),
+    ]
+
+    @pytest.mark.parametrize(
+        "case",
+        is_type_alias_type_cases,
+        ids=[str(c[0]) for c in is_type_alias_type_cases],
+    )
+    def test_is_type_alias_type(case):
+        assert is_type_alias_type(case[0]) == case[1]
+
+    def test_type_alias_to_none_does_not_fold_to_optional():
+        """A union with an alias to None should not collapse to Optional, since that would
+        erase the alias name from the rendered output. See issue #19."""
+        if sys.version_info < (3, 14):
+            assert (
+                typenames(
+                    typing.Union[int, type_statement_fixtures.NoneAlias],
+                    optional_syntax="optional_special_form",
+                )
+                == "Union[int, tests.type_statement_fixtures.NoneAlias]"
+            )
+        else:
+            assert (
+                typenames(
+                    typing.Union[int, type_statement_fixtures.NoneAlias],
+                    optional_syntax="optional_special_form",
+                )
+                == "int | tests.type_statement_fixtures.NoneAlias"
+            )

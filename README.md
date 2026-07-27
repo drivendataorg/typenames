@@ -211,6 +211,22 @@ typenames(Annotated[int, "some metadata"], include_extras=True)
 #> "Annotated[int, 'some metadata']"
 ```
 
+## Type Aliases (PEP 695)
+
+typenames recognizes [PEP 695](https://peps.python.org/pep-0695/) type aliases, i.e., ones defined with the `type` statement (Python 3.12+) or constructed directly with `typing.TypeAliasType` / `typing_extensions.TypeAliasType`. An alias renders as its name, with the same `remove_modules` handling applied to its module prefix as any other type. typenames does not expand aliases to show what they point to.
+
+```python
+type MyAlias = list[int]
+
+typenames(MyAlias)
+#> 'MyAlias'
+typenames(list[MyAlias])
+#> 'list[MyAlias]'
+```
+
+> [!NOTE]
+> A union containing an alias to `None` does **not** collapse to `Optional[...]`, even with `optional_syntax="optional_special_form"`.
+
 ---
 
 <sup>Reproducible examples created by <a href="https://github.com/jayqi/reprexlite">reprexlite</a>.</sup>
