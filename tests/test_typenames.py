@@ -174,6 +174,10 @@ def test_remove_modules():
     assert typenames(MyClass, config=config) == "MyClass"
     assert typenames(OtherModuleClass, config=config) == "other_module.OtherModuleClass"
     assert typenames(FnScopeClass, config=config) == "test_remove_modules.<locals>.FnScopeClass"
+    assert (
+        typenames(typing.Callable[[int], int], remove_modules=[])
+        == "collections.abc.Callable[[builtins.int], builtins.int]"
+    )
 
     # Add to defaults
     config = TypenamesConfig(remove_modules=DEFAULT_REMOVE_MODULES + ["tests.test_typenames"])
@@ -291,6 +295,13 @@ def test_standard_collection_syntax_typing_module():
     generic aliases."""
     assert typenames(typing.List[int], standard_collection_syntax="typing_module") == "List[int]"
     assert typenames(list[int], standard_collection_syntax="typing_module") == "List[int]"
+    assert (
+        typenames(
+            typing.Callable[[typing.List[int]], int],
+            standard_collection_syntax="typing_module",
+        )
+        == "Callable[[List[int]], int]"
+    )
 
 
 def test_annotated_include_extras():
@@ -302,6 +313,10 @@ def test_annotated_include_extras():
 
     obj = object()
     assert typenames(Annotated[str, obj], include_extras=True) == f"Annotated[str, {obj}]"
+    assert (
+        typenames(typing.Callable[[Annotated[int, "meta"]], int], include_extras=True)
+        == "Callable[[Annotated[int, 'meta']], int]"
+    )
 
 
 def test_node_repr():
