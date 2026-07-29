@@ -21,7 +21,10 @@ classifiers = [
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
-tests = ["pytest>=6"]
+tests = [
+  "pytest>=6",
+  "typing_extensions",
+]
 
 [project.urls]
 "Homepage" = "https://typenames.drivendata.org/"
@@ -51,10 +54,9 @@ typecheck = [
   "mypy",
 ]
 tests = [
-  "pytest",
+  "typenames[tests]",
   "coverage",
   "pytest-cov",
-  "typing_extensions",
 ]
 docs = [
   "markdown-callouts",

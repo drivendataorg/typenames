@@ -187,6 +187,8 @@ def test_remove_modules():
     assert (
         typenames(FnScopeClass) == "tests.test_typenames.test_remove_modules.<locals>.FnScopeClass"
     )
+    if sys.version_info >= (3, 12):
+        assert typenames(type_statement_fixtures.Simple) == "tests.type_statement_fixtures.Simple"
 
     # Override
     config = TypenamesConfig(remove_modules=["tests.test_typenames"])
@@ -194,6 +196,11 @@ def test_remove_modules():
     assert typenames(MyClass, config=config) == "MyClass"
     assert typenames(OtherModuleClass, config=config) == "other_module.OtherModuleClass"
     assert typenames(FnScopeClass, config=config) == "test_remove_modules.<locals>.FnScopeClass"
+    if sys.version_info >= (3, 12):
+        # The override above targets tests.test_typenames, not the alias's own module, so a
+        # dedicated config is needed to actually strip the alias's module prefix.
+        alias_config = TypenamesConfig(remove_modules=["tests.type_statement_fixtures"])
+        assert typenames(type_statement_fixtures.Simple, config=alias_config) == "Simple"
 
     # Add to defaults
     config = TypenamesConfig(remove_modules=DEFAULT_REMOVE_MODULES + ["tests.test_typenames"])
@@ -211,6 +218,8 @@ def test_remove_modules():
     assert typenames(FnScopeClass, config=config) == "FnScopeClass"
 
     assert typenames(collections.Counter[str], config=config) == "Counter[str]"
+    if sys.version_info >= (3, 12):
+        assert typenames(type_statement_fixtures.Simple, config=config) == "Simple"
     assert typenames(collections.abc.Sequence[str], config=config) == "Sequence[str]"
 
 

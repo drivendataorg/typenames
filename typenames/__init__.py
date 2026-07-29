@@ -32,14 +32,14 @@ if sys.version_info >= (3, 12):
 
     _TYPE_ALIAS_TYPES += (TypeAliasType,)
 try:
-    # typing_extensions.TypeAliasType is a distinct class from typing.TypeAliasType even on
-    # Python 3.12+ (it is not simply re-exported), so both are checked when typing_extensions
+    # typing_extensions.TypeAliasType is a distinct class from typing.TypeAliasType on Python
+    # 3.12 and 3.13 (not simply re-exported there), so both are checked when typing_extensions
     # is installed: a library targeting multiple Python versions may construct aliases via
     # typing_extensions.TypeAliasType directly rather than the `type` statement.
     from typing_extensions import TypeAliasType as _TypingExtensionsTypeAliasType
 
     _TYPE_ALIAS_TYPES += (_TypingExtensionsTypeAliasType,)
-except ImportError:
+except ImportError:  # pragma: no cover
     pass
 
 
@@ -493,7 +493,7 @@ def is_annotated_special_form(tp: type) -> bool:
     return get_origin(tp) is Annotated
 
 
-def is_type_alias_type(tp: Any) -> bool:
+def is_type_alias_type(tp: _TypeForm) -> bool:
     """Check if type annotation is a PEP 695 type alias (typing.TypeAliasType), e.g., one
     created with the `type` statement. Does not match a subscripted generic type alias, e.g.,
     `Gen[int]` for `type Gen[T] = list[T]`, since that is a types.GenericAlias whose origin is

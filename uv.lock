@@ -2161,6 +2161,7 @@ source = { editable = "." }
 [package.optional-dependencies]
 tests = [
     { name = "pytest" },
+    { name = "typing-extensions" },
 ]
 
 [package.dev-dependencies]
@@ -2197,16 +2198,18 @@ lint = [
 ]
 tests = [
     { name = "coverage" },
-    { name = "pytest" },
     { name = "pytest-cov" },
-    { name = "typing-extensions" },
+    { name = "typenames", extra = ["tests"] },
 ]
 typecheck = [
     { name = "mypy" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'tests'", specifier = ">=6" }]
+requires-dist = [
+    { name = "pytest", marker = "extra == 'tests'", specifier = ">=6" },
+    { name = "typing-extensions", marker = "extra == 'tests'" },
+]
 provides-extras = ["tests"]
 
 [package.metadata.requires-dev]
@@ -2239,9 +2242,8 @@ inspect-types = [
 lint = [{ name = "ruff" }]
 tests = [
     { name = "coverage" },
-    { name = "pytest" },
     { name = "pytest-cov" },
-    { name = "typing-extensions" },
+    { name = "typenames", extras = ["tests"] },
 ]
 typecheck = [{ name = "mypy" }]
 
