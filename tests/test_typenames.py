@@ -196,15 +196,15 @@ def test_remove_modules():
     assert typenames(MyClass, config=config) == "MyClass"
     assert typenames(OtherModuleClass, config=config) == "other_module.OtherModuleClass"
     assert typenames(FnScopeClass, config=config) == "test_remove_modules.<locals>.FnScopeClass"
+    assert (
+        typenames(typing.Callable[[MyClass], OtherModuleClass], config=config)
+        == "collections.abc.Callable[[MyClass], other_module.OtherModuleClass]"
+    )
     if sys.version_info >= (3, 12):
         # The override above targets tests.test_typenames, not the alias's own module, so a
         # dedicated config is needed to actually strip the alias's module prefix.
         alias_config = TypenamesConfig(remove_modules=["tests.type_statement_fixtures"])
         assert typenames(type_statement_fixtures.Simple, config=alias_config) == "Simple"
-    assert (
-        typenames(typing.Callable[[int], int], remove_modules=[])
-        == "collections.abc.Callable[[builtins.int], builtins.int]"
-    )
 
     # Add to defaults
     config = TypenamesConfig(remove_modules=DEFAULT_REMOVE_MODULES + ["tests.test_typenames"])
