@@ -2208,7 +2208,7 @@ typecheck = [
 [package.metadata]
 requires-dist = [
     { name = "pytest", marker = "extra == 'tests'", specifier = ">=6" },
-    { name = "typing-extensions", marker = "extra == 'tests'" },
+    { name = "typing-extensions", marker = "extra == 'tests'", specifier = ">=4.6.0" },
 ]
 provides-extras = ["tests"]
 
