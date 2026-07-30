@@ -2155,12 +2155,13 @@ wheels = [
 
 [[package]]
 name = "typenames"
-version = "2.1.1"
+version = "2.2.0"
 source = { editable = "." }
 
 [package.optional-dependencies]
 tests = [
     { name = "pytest" },
+    { name = "typing-extensions" },
 ]
 
 [package.dev-dependencies]
@@ -2197,15 +2198,18 @@ lint = [
 ]
 tests = [
     { name = "coverage" },
-    { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "typenames", extra = ["tests"] },
 ]
 typecheck = [
     { name = "mypy" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytest", marker = "extra == 'tests'", specifier = ">=6" }]
+requires-dist = [
+    { name = "pytest", marker = "extra == 'tests'", specifier = ">=6" },
+    { name = "typing-extensions", marker = "extra == 'tests'", specifier = ">=4.6.0" },
+]
 provides-extras = ["tests"]
 
 [package.metadata.requires-dev]
@@ -2238,8 +2242,8 @@ inspect-types = [
 lint = [{ name = "ruff" }]
 tests = [
     { name = "coverage" },
-    { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "typenames", extras = ["tests"] },
 ]
 typecheck = [{ name = "mypy" }]
 
