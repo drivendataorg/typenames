@@ -1,6 +1,6 @@
 [project]
 name = "typenames"
-version = "2.1.1"
+version = "2.2.0"
 description = "String representations of type annotations."
 readme = "README.md"
 authors = [{ name = "Jay Qi", email = "jayqi.opensource@gmail.com" }]
@@ -21,7 +21,10 @@ classifiers = [
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
-tests = ["pytest>=6"]
+tests = [
+  "pytest>=6",
+  "typing_extensions>=4.6.0",
+]
 
 [project.urls]
 "Homepage" = "https://typenames.drivendata.org/"
@@ -51,7 +54,7 @@ typecheck = [
   "mypy",
 ]
 tests = [
-  "pytest",
+  "typenames[tests]",
   "coverage",
   "pytest-cov",
 ]
@@ -74,6 +77,9 @@ inspect-types = [
 [tool.ruff]
 line-length = 99
 src = ["typenames", "tests"]
+
+[tool.ruff.per-file-target-version]
+"tests/type_statement_fixtures.py" = "py312"
 
 [tool.ruff.lint]
 select = [
