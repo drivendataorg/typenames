@@ -196,6 +196,10 @@ def test_remove_modules():
     assert typenames(MyClass, config=config) == "MyClass"
     assert typenames(OtherModuleClass, config=config) == "other_module.OtherModuleClass"
     assert typenames(FnScopeClass, config=config) == "test_remove_modules.<locals>.FnScopeClass"
+    assert (
+        typenames(typing.Callable[[MyClass], OtherModuleClass], config=config)
+        == "collections.abc.Callable[[MyClass], other_module.OtherModuleClass]"
+    )
     if sys.version_info >= (3, 12):
         # The override above targets tests.test_typenames, not the alias's own module, so a
         # dedicated config is needed to actually strip the alias's module prefix.
@@ -320,6 +324,13 @@ def test_standard_collection_syntax_typing_module():
     generic aliases."""
     assert typenames(typing.List[int], standard_collection_syntax="typing_module") == "List[int]"
     assert typenames(list[int], standard_collection_syntax="typing_module") == "List[int]"
+    assert (
+        typenames(
+            typing.Callable[[typing.List[int]], int],
+            standard_collection_syntax="typing_module",
+        )
+        == "Callable[[List[int]], int]"
+    )
 
 
 def test_annotated_include_extras():
@@ -331,6 +342,10 @@ def test_annotated_include_extras():
 
     obj = object()
     assert typenames(Annotated[str, obj], include_extras=True) == f"Annotated[str, {obj}]"
+    assert (
+        typenames(typing.Callable[[Annotated[int, "meta"]], int], include_extras=True)
+        == "Callable[[Annotated[int, 'meta']], int]"
+    )
 
 
 def test_node_repr():

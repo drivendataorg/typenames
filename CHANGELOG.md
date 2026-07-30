@@ -5,6 +5,7 @@
 - Added explicit handling of [PEP 695](https://peps.python.org/pep-0695/) type aliases (`type X = ...`, `typing.TypeAliasType`). Rendering was already correct by accident but is now deliberate and tested. ([PR #24](https://github.com/drivendataorg/typenames/pull/24), [Issue #19](https://github.com/drivendataorg/typenames/issues/19))
 - Added `is_type_alias_type` predicate function. ([PR #24](https://github.com/drivendataorg/typenames/pull/24), [Issue #19](https://github.com/drivendataorg/typenames/issues/19))
 - Fixed incorrect `__version__` value. ([PR #20](https://github.com/drivendataorg/typenames/pull/20), [Issue #18](https://github.com/drivendataorg/typenames/issues/18))
+- Fixed missing config propagation for the parameters of a `Callable`. ([PR #23](https://github.com/drivendataorg/typenames/pull/23) thanks to [@nightcityblade](https://github.com/nightcityblade), [Issue #21](https://github.com/drivendataorg/typenames/issues/21))
 
 ## v2.1.0 (2025-09-15)
 

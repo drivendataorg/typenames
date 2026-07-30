@@ -376,7 +376,11 @@ def parse_type_tree(
         )
     elif isinstance(tp, list):
         # This is the parameter list for Callable
-        node = ParamsListNode(tp=tp, arg_nodes=[parse_type_tree(a) for a in tp], config=config)
+        node = ParamsListNode(
+            tp=tp,
+            arg_nodes=[parse_type_tree(a, config=config) for a in tp],
+            config=config,
+        )
     elif isinstance(tp, (int, bytes, str, Enum, bool)) or tp is None:
         node = LiteralNode(tp=tp, config=config)
     else:
