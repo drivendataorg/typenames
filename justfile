@@ -30,7 +30,7 @@ test *args:
 
 # Run all tests with Python version matrix
 test-all:
-    for python in 3.9 3.10 3.11 3.12 3.13; do \
+    for python in 3.9 3.10 3.11 3.12 3.13 3.14 3.15; do \
         just python=$python test; \
     done
 
@@ -45,7 +45,7 @@ inspect-types:
 
 # Generate notebook that inspects types for all Python versions
 inspect-types-all:
-    for python in 3.9 3.10 3.11 3.12 3.13; do \
+    for python in 3.9 3.10 3.11 3.12 3.13 3.14 3.15; do \
         just python=$python inspect-types; \
     done
 
