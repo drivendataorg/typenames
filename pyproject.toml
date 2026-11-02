@@ -4,11 +4,11 @@ version = "2.2.0"
 description = "String representations of type annotations."
 readme = "README.md"
 authors = [{ name = "Jay Qi", email = "jayqi.opensource@gmail.com" }]
-license = { file = "LICENSE" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["typing", "type hints", "type annotations", "pep 585", "pep 604"]
 classifiers = [
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
@@ -21,12 +21,6 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 
-[project.optional-dependencies]
-tests = [
-  "pytest>=6",
-  "typing_extensions>=4.6.0",
-]
-
 [project.urls]
 "Homepage" = "https://typenames.drivendata.org/"
 "Repository" = "https://github.com/drivendataorg/typenames"
@@ -35,8 +29,8 @@ tests = [
 "Changelog" = "https://typenames.drivendata.org/stable/changelog/"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
 
 ## DEV
 
@@ -55,9 +49,10 @@ typecheck = [
   "mypy",
 ]
 tests = [
-  "typenames[tests]",
   "coverage",
+  "pytest>=6",
   "pytest-cov",
+  "typing_extensions>=4.6.0",
 ]
 docs = [
   "markdown-callouts",
