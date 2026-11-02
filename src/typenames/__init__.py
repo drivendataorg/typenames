@@ -188,7 +188,7 @@ class TypeNode(BaseNode):
 class GenericNode(BaseNode):
     """Node that represents a generic type."""
 
-    origin: Union[Any, None]
+    origin: Any
     arg_nodes: List[BaseNode]
 
     @property
@@ -268,12 +268,12 @@ class GenericNode(BaseNode):
                 origin_name = f"{typing_alias._name}"  # type: ignore
             else:
                 origin_module_prefix = self.origin.__module__ + "."
-                origin_name = self.origin.__qualname__  # type: ignore[union-attr]
+                origin_name = self.origin.__qualname__
         # Case: Typing module collection alias
         elif is_typing_module_collection_alias(self.tp):
             if self.config.standard_collection_syntax == StandardCollectionSyntax.STANDARD_CLASS:
                 origin_module_prefix = self.origin.__module__ + "."
-                origin_name = self.origin.__qualname__  # type: ignore[union-attr]
+                origin_name = self.origin.__qualname__
             else:
                 origin_module_prefix = "typing."
                 origin_name = self.tp._name
@@ -474,21 +474,20 @@ STANDARD_COLLECTION_CLASSES = frozenset(STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPP
 """Frozenset of standard collection classes that support use as a generic type starting in
 Python 3.9 (PEP 585)."""
 
+_TYPING_GENERIC_ALIAS: type = getattr(typing, "_GenericAlias")
+"""Private class of typing module generic aliases, e.g., typing.List[int]."""
+
 
 def is_standard_collection_type_alias(tp: type) -> bool:
     """Check if type annotation is a generic type and uses a standard collection type as a generic
     alias."""
-    return (
-        get_origin(tp) in STANDARD_COLLECTION_CLASSES and type(tp) is not typing._GenericAlias  # type: ignore[attr-defined]
-    )
+    return get_origin(tp) in STANDARD_COLLECTION_CLASSES and type(tp) is not _TYPING_GENERIC_ALIAS
 
 
 def is_typing_module_collection_alias(tp: type) -> bool:
     """Check if type annotation is a generic type and uses a typing module collection generic
     alias, e.g., typing.List."""
-    return (
-        get_origin(tp) in STANDARD_COLLECTION_CLASSES and type(tp) is typing._GenericAlias  # type: ignore[attr-defined]
-    )
+    return get_origin(tp) in STANDARD_COLLECTION_CLASSES and type(tp) is _TYPING_GENERIC_ALIAS
 
 
 def is_annotated_special_form(tp: type) -> bool:

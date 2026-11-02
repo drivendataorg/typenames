@@ -25,11 +25,30 @@ format *args:
 zizmor *args:
     uvx --exclude-newer "7 days" zizmor .github/ {{args}}
 
-# Run static typechecking (passes through args)
+# Run static typechecking with all typecheckers
 [arg("python", long)]
-typecheck python=python *args:
+typecheck python=python:
+    just typecheck-mypy --python={{python}}
+    just typecheck-pyrefly --python={{python}}
+    just typecheck-ty --python={{python}}
+
+# Run static typechecking with mypy (passes through args)
+[arg("python", long)]
+typecheck-mypy python=python *args:
     uv run --python={{python}} --isolated --no-dev --group typecheck -- \
         mypy --python-version={{python}} {{args}}
+
+# Run static typechecking with pyrefly (passes through args)
+[arg("python", long)]
+typecheck-pyrefly python=python *args:
+    uv run --python={{python}} --isolated --no-dev --group typecheck -- \
+        pyrefly check --python-version={{python}} {{args}}
+
+# Run static typechecking with ty (passes through args)
+[arg("python", long)]
+typecheck-ty python=python *args:
+    uv run --python={{python}} --isolated --no-dev --group typecheck -- \
+        ty check --python-version={{python}} {{args}}
 
 # Run the tests (passes through args)
 [arg("python", long)]

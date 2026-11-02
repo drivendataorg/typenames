@@ -46,6 +46,8 @@ lint = [
 ]
 typecheck = [
   "mypy",
+  "pyrefly",
+  "ty",
 ]
 tests = [
   "coverage",
@@ -95,6 +97,12 @@ force-sort-within-sections = true
 
 [tool.mypy]
 files = ["src/typenames", "tests/typechecks.py"]
+
+[tool.pyrefly]
+project-includes = ["src/typenames", "tests/typechecks.py"]
+
+[tool.ty.src]
+include = ["src/typenames", "tests/typechecks.py"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
