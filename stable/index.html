@@ -420,6 +420,15 @@ You are not viewing the current stable version.
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#type-aliases-pep-695" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Aliases (PEP 695)
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -585,6 +594,15 @@ You are not viewing the current stable version.
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#type-aliases-pep-695" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Aliases (PEP 695)
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -610,7 +628,10 @@ You are not viewing the current stable version.
 <a href="https://github.com/conda-forge/typenames-feedstock"><img alt="conda-forge" src="https://img.shields.io/conda/vn/conda-forge/typenames.svg" /></a>
 <a href="https://pypi.org/project/typenames/"><img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/typenames" /></a>
 <a href="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain"><img alt="tests" src="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml/badge.svg?branch=main" /></a>
-<a href="https://codecov.io/gh/drivendataorg/typenames"><img alt="codecov" src="https://codecov.io/gh/drivendataorg/typenames/branch/main/graph/badge.svg" /></a></p>
+<a href="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain"><img alt="coverage" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/drivendataorg/typenames/badges/coverage.json" /></a>
+<a href="https://mypy-lang.org/"><img alt="mypy" src="https://img.shields.io/badge/mypy-checked-2A6DB2" /></a>
+<a href="https://github.com/facebook/pyrefly"><img alt="pyrefly" src="https://img.shields.io/endpoint?url=https://pyrefly.org/badge.json&amp;color=c03f0c" /></a>
+<a href="https://github.com/astral-sh/ty"><img alt="ty" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json" /></a></p>
 <p><strong>typenames</strong> is a configurable Python library for creating string representations of type annotations. By default, it produces compact representations by removing standard library module names. Configurable options include standardizing on <code>|</code> operator syntax for unions or standard collections classes for generics.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typenames</span><span class="w"> </span><span class="kn">import</span> <span class="n">typenames</span>
@@ -711,10 +732,6 @@ You are not viewing the current stable version.
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Runtime use of the <code>|</code> operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la <a href="https://peps.python.org/pep-0563/">PEP 563</a> with <code>from __future__ import__annotations__</code>. Support for the <code>|</code> operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
 <p>In Python 3.14, the <code>typing.Union</code> special form and the <code>types.Union</code> type (produced by the <code>|</code> operator) have been <a href="https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union">unified into a single implementation</a>. This means that both will always be rendered with the <code>|</code> operator when using <code>as_given</code>, as their created instances are no longer distinguishable.</p>
 </div>
 <div class="admonition important">
@@ -729,10 +746,6 @@ You are not viewing the current stable version.
 <li><strong><code>"union_special_form"</code></strong>: render all optional types using the <code>typing.Optional</code> special form</li>
 <li><strong><code>"optional_special_form"</code></strong>: render all optional types using the <code>typing.Optional</code> special form</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Runtime use of the <code>|</code> operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la <a href="https://peps.python.org/pep-0563/">PEP 563</a> with <code>from __future__ import__annotations__</code>. Support for the <code>|</code> operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.</p>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In Python 3.14, the <code>typing.Optional</code> special form no longer produces a <code>typing.Optional</code> type object; instead, it produces a <code>Union</code> object. Additionally, the <code>typing.Union</code> special form and the <code>types.Union</code> type (produced by the <code>|</code> operator) have been <a href="https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union">unified into a single implementation</a>. This means that all syntaxes for optional types will be rendered with the <code>|</code> operator when using <code>as_given</code>, as their created instances are no longer distinguishable.</p>
@@ -806,6 +819,25 @@ You are not viewing the current stable version.
 <span class="n">typenames</span><span class="p">(</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;some metadata&quot;</span><span class="p">],</span> <span class="n">include_extras</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1">#&gt; &quot;Annotated[int, &#39;some metadata&#39;]&quot;</span>
 </code></pre></div>
+<h2 id="type-aliases-pep-695">Type Aliases (PEP 695)<a class="headerlink" href="#type-aliases-pep-695" title="Permanent link">&para;</a></h2>
+<p>typenames recognizes <a href="https://peps.python.org/pep-0695/">PEP 695</a> type aliases, i.e., ones defined with the <code>type</code> statement (Python 3.12+) or constructed directly with <code>typing.TypeAliasType</code> / <code>typing_extensions.TypeAliasType</code>. An alias renders as its name, with the same <code>remove_modules</code> handling applied to its module prefix as any other type. typenames does not expand aliases to show what they point to.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typenames</span><span class="w"> </span><span class="kn">import</span> <span class="n">typenames</span>
+
+<span class="nb">type</span> <span class="n">MyAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="n">typenames</span><span class="p">(</span><span class="n">MyAlias</span><span class="p">)</span>
+<span class="c1">#&gt; &#39;MyAlias&#39;</span>
+<span class="n">typenames</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="n">MyAlias</span><span class="p">])</span>
+<span class="c1">#&gt; &#39;list[MyAlias]&#39;</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>type</code> statement is new in Python 3.12. On earlier versions, an equivalent alias can be constructed directly with <code>typing_extensions.TypeAliasType</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A union containing an alias to <code>None</code> does <strong>not</strong> collapse to <code>Optional[...]</code>, even with <code>optional_syntax="optional_special_form"</code>.</p>
+</div>
 <hr />
 <p><sup>Reproducible examples created by <a href="https://github.com/jayqi/reprexlite">reprexlite</a>.</sup></p>
 

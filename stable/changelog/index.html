@@ -378,6 +378,15 @@ You are not viewing the current stable version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v220-2026-11-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      v2.2.0 (2026-11-02)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v210-2025-09-15" class="md-nav__link">
     <span class="md-ellipsis">
       v2.1.0 (2025-09-15)
@@ -466,6 +475,15 @@ You are not viewing the current stable version.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v220-2026-11-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      v2.2.0 (2026-11-02)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v210-2025-09-15" class="md-nav__link">
     <span class="md-ellipsis">
       v2.1.0 (2025-09-15)
@@ -539,6 +557,22 @@ You are not viewing the current stable version.
 
 
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
+<h2 id="v220-2026-11-02">v2.2.0 (2026-11-02)<a class="headerlink" href="#v220-2026-11-02" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Added support for Python 3.15. (<a href="https://github.com/drivendataorg/typenames/pull/26">PR #26</a>)</li>
+<li>Removed support for Python 3.9. (<a href="https://github.com/drivendataorg/typenames/pull/30">PR #30</a>)</li>
+<li>Deprecated <code>OR_OPERATOR_SUPPORTED</code> flag, since typenames no longer supports Python versions where this is false. (<a href="https://github.com/drivendataorg/typenames/pull/30">PR #30</a>)</li>
+<li>Added explicit handling of <a href="https://peps.python.org/pep-0695/">PEP 695</a> type aliases (<code>type X = ...</code>, <code>typing.TypeAliasType</code>). Rendering was already correct by accident but is now deliberate and tested. (<a href="https://github.com/drivendataorg/typenames/pull/24">PR #24</a>, <a href="https://github.com/drivendataorg/typenames/issues/19">Issue #19</a>)<ul>
+<li>Added <code>is_type_alias_type</code> predicate function.</li>
+</ul>
+</li>
+<li>Changed the type annotation of <code>GenericNode.origin</code> from <code>Any | None</code> to <code>Any</code>, since it is never <code>None</code>. (<a href="https://github.com/drivendataorg/typenames/pull/36">PR #36</a>)</li>
+<li>Fixed incorrect <code>__version__</code> value. (<a href="https://github.com/drivendataorg/typenames/pull/20">PR #20</a>, <a href="https://github.com/drivendataorg/typenames/issues/18">Issue #18</a>)</li>
+<li>Fixed missing config propagation for the parameters of a <code>Callable</code>. (<a href="https://github.com/drivendataorg/typenames/pull/23">PR #23</a> thanks to <a href="https://github.com/nightcityblade">@nightcityblade</a>, <a href="https://github.com/drivendataorg/typenames/issues/21">Issue #21</a>)</li>
+<li>Changed the source distribution to contain only the package source, <code>pyproject.toml</code>, README, and LICENSE. It previously also included tests, docs, and other repository files. This is a result of changing the build backend from hatchling to uv_build. (<a href="https://github.com/drivendataorg/typenames/pull/29">PR #29</a>)</li>
+<li>Removed the <code>tests</code> optional dependencies extra. (<a href="https://github.com/drivendataorg/typenames/pull/29">PR #29</a>)</li>
+<li>Added static type checking with <a href="https://github.com/facebook/pyrefly">pyrefly</a> and <a href="https://github.com/astral-sh/ty">ty</a> in addition to mypy. (<a href="https://github.com/drivendataorg/typenames/pull/36">PR #36</a>)</li>
+</ul>
 <h2 id="v210-2025-09-15">v2.1.0 (2025-09-15)<a class="headerlink" href="#v210-2025-09-15" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Added support for Python 3.14.</li>
