@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.2.0 (Unreleased)
+## v2.2.0 (2026-11-02)
 
 - Added support for Python 3.15. ([PR #26](https://github.com/drivendataorg/typenames/pull/26))
 - Removed support for Python 3.9. ([PR #30](https://github.com/drivendataorg/typenames/pull/30))
