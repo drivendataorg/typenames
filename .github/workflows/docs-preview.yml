@@ -4,23 +4,31 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   build:
     name: Build docs and deploy preview
     runs-on: ubuntu-latest
     environment: docs-preview
+    permissions:
+      contents: read
+      deployments: write # GitHub deployment for the preview
+      pull-requests: write # Comment with the preview URL
+      statuses: write # Commit status with the preview URL
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v2
-
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          enable-cache: true
+          persist-credentials: false
+
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1.55.0" # Keep in sync with minimum-version in justfile
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
           cache-suffix: "docs"
-          cache-dependency-glob: |
-            uv.lock
 
       - name: Build docs
         run: |
@@ -29,15 +37,17 @@ jobs:
       - name: Get preview identifier
         id: get_id
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            PREVIEW_IDENTIFIER="PR${{ github.event.number }}"
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            PREVIEW_IDENTIFIER="PR${PR_NUMBER}"
           else
             PREVIEW_IDENTIFIER="$(git rev-parse --short HEAD)"
           fi
-          echo "PREVIEW_IDENTIFIER=$PREVIEW_IDENTIFIER" | tee -a $GITHUB_OUTPUT
+          echo "PREVIEW_IDENTIFIER=$PREVIEW_IDENTIFIER" | tee -a "$GITHUB_OUTPUT"
+        env:
+          PR_NUMBER: ${{ github.event.number }}
 
       - name: Deploy preview to Netlify
-        uses: nwtgck/actions-netlify@v2.0.0
+        uses: nwtgck/actions-netlify@d22a32a27c918fe470bbc562e984f80ec48c2668 # v4.0.0
         with:
           publish-dir: "./docs/site"
           production-deploy: false

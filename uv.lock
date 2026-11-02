@@ -2001,6 +2001,9 @@ tests = [
 typecheck = [
     { name = "mypy" },
 ]
+vspect = [
+    { name = "vspect" },
+]
 
 [package.metadata]
 
@@ -2039,6 +2042,7 @@ tests = [
     { name = "typing-extensions", specifier = ">=4.6.0" },
 ]
 typecheck = [{ name = "mypy" }]
+vspect = [{ name = "vspect" }]
 
 [[package]]
 name = "typing-extensions"
