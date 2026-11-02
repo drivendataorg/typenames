@@ -1369,7 +1369,7 @@ settings in the given configuration.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenericNode</span><span class="p">(</span><span class="n">BaseNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Node that represents a generic type.&quot;&quot;&quot;</span>
 
-    <span class="n">origin</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">arg_nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseNode</span><span class="p">]</span>
 
     <span class="nd">@property</span>
@@ -1449,12 +1449,12 @@ settings in the given configuration.</p>
                 <span class="n">origin_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">typing_alias</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># type: ignore</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">origin_module_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
-                <span class="n">origin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__qualname__</span>  <span class="c1"># type: ignore[union-attr]</span>
+                <span class="n">origin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__qualname__</span>
         <span class="c1"># Case: Typing module collection alias</span>
         <span class="k">elif</span> <span class="n">is_typing_module_collection_alias</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tp</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">standard_collection_syntax</span> <span class="o">==</span> <span class="n">StandardCollectionSyntax</span><span class="o">.</span><span class="n">STANDARD_CLASS</span><span class="p">:</span>
                 <span class="n">origin_module_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
-                <span class="n">origin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__qualname__</span>  <span class="c1"># type: ignore[union-attr]</span>
+                <span class="n">origin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="vm">__qualname__</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">origin_module_prefix</span> <span class="o">=</span> <span class="s2">&quot;typing.&quot;</span>
                 <span class="n">origin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tp</span><span class="o">.</span><span class="n">_name</span>
@@ -2177,9 +2177,9 @@ patterns.</p>
 
             <details class="quote">
               <summary>Source code in <code>typenames/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">494</span>
-<span class="normal">495</span>
-<span class="normal">496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_annotated_special_form</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_annotated_special_form</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if type annotation is the typing.Annotated special form.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Annotated</span>
 </code></pre></div></td></tr></table></div>
@@ -2205,17 +2205,13 @@ alias.</p>
 
             <details class="quote">
               <summary>Source code in <code>typenames/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">478</span>
-<span class="normal">479</span>
-<span class="normal">480</span>
-<span class="normal">481</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">481</span>
 <span class="normal">482</span>
-<span class="normal">483</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_standard_collection_type_alias</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">483</span>
+<span class="normal">484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_standard_collection_type_alias</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if type annotation is a generic type and uses a standard collection type as a generic</span>
 <span class="sd">    alias.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STANDARD_COLLECTION_CLASSES</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">typing</span><span class="o">.</span><span class="n">_GenericAlias</span>  <span class="c1"># type: ignore[attr-defined]</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STANDARD_COLLECTION_CLASSES</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_TYPING_GENERIC_ALIAS</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2241,12 +2237,12 @@ the TypeAliasType.</p>
 
             <details class="quote">
               <summary>Source code in <code>typenames/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">499</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">498</span>
+<span class="normal">499</span>
 <span class="normal">500</span>
 <span class="normal">501</span>
 <span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_type_alias_type</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="n">_TypeForm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">503</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_type_alias_type</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="n">_TypeForm</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if type annotation is a PEP 695 type alias (typing.TypeAliasType), e.g., one</span>
 <span class="sd">    created with the `type` statement. Does not match a subscripted generic type alias, e.g.,</span>
 <span class="sd">    `Gen[int]` for `type Gen[T] = list[T]`, since that is a types.GenericAlias whose origin is</span>
@@ -2275,17 +2271,13 @@ alias, e.g., typing.List.</p>
 
             <details class="quote">
               <summary>Source code in <code>typenames/__init__.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">486</span>
-<span class="normal">487</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
 <span class="normal">488</span>
 <span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_typing_module_collection_alias</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">490</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_typing_module_collection_alias</span><span class="p">(</span><span class="n">tp</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if type annotation is a generic type and uses a typing module collection generic</span>
 <span class="sd">    alias, e.g., typing.List.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STANDARD_COLLECTION_CLASSES</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">is</span> <span class="n">typing</span><span class="o">.</span><span class="n">_GenericAlias</span>  <span class="c1"># type: ignore[attr-defined]</span>
-    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">in</span> <span class="n">STANDARD_COLLECTION_CLASSES</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">is</span> <span class="n">_TYPING_GENERIC_ALIAS</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
