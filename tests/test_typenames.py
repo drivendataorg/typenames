@@ -89,6 +89,11 @@ cases = [
     # typing.Annotated is available in Python 3.9, or backported with typing_extensions
     (Annotated[str, "some metadata"], "str"),
     (Annotated[str, object()], "str"),
+    # Python 3.10 adds union syntax with the | operator (bitwise or)
+    (int | str, "int | str"),
+    (int | None, "int | None"),
+    (None | int, "None | int"),
+    (int | None | str, "int | None | str"),
 ]
 
 if sys.version_info < (3, 14):
@@ -118,17 +123,6 @@ else:
             (typing.Optional[Annotated[str, object()]], "str | None"),
         ]
     )
-
-# Python 3.10 adds union syntax with the | operator (bitwise or),
-# typing.Concatenate, typing.ParamSpec, typing.TypeAlias
-cases.extend(
-    [
-        (int | str, "int | str"),
-        (int | None, "int | None"),
-        (None | int, "None | int"),
-        (int | None | str, "int | None | str"),
-    ]
-)
 
 if sys.version_info >= (3, 11):
     # Python 3.11 adds typing.LiteralString, typing.Never, typing.Self
