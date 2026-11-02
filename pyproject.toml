@@ -72,6 +72,9 @@ vspect = [
 
 ## TOOLS ##
 
+[tool.uv]
+exclude-newer = "7 days"
+
 [tool.ruff]
 line-length = 99
 src = ["src", "tests"]
