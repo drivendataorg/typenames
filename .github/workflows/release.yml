@@ -183,6 +183,7 @@ jobs:
         if: ${{ !inputs.dry-run }}
         run: |
           gh release create "${INPUTS_VERSION}" \
+            --title "${INPUTS_VERSION}" \
             --target "${GITHUB_SHA}" \
             --notes-file __CHANGELOG-extracted.md \
             ./dist/*.whl \
