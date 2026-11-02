@@ -105,7 +105,7 @@ copyright: |
   </div><div>Documentation made with <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>
 
 watch:
-  - "../typenames"
+  - "../src/typenames"
   - "../README.md"
   - "../CHANGELOG.md"
   - "./main.py"
