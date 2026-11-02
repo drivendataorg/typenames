@@ -2,17 +2,17 @@
 
 ## v2.2.0 (Unreleased)
 
-- Added support for Python 3.15.
-- Removed support for Python 3.9.
-- Deprecated `OR_OPERATOR_SUPPORTED` flag, since typenames no longer supports Python versions where this is false.
+- Added support for Python 3.15. ([PR #26](https://github.com/drivendataorg/typenames/pull/26))
+- Removed support for Python 3.9. ([PR #30](https://github.com/drivendataorg/typenames/pull/30))
+- Deprecated `OR_OPERATOR_SUPPORTED` flag, since typenames no longer supports Python versions where this is false. ([PR #30](https://github.com/drivendataorg/typenames/pull/30))
 - Added explicit handling of [PEP 695](https://peps.python.org/pep-0695/) type aliases (`type X = ...`, `typing.TypeAliasType`). Rendering was already correct by accident but is now deliberate and tested. ([PR #24](https://github.com/drivendataorg/typenames/pull/24), [Issue #19](https://github.com/drivendataorg/typenames/issues/19))
-- Added `is_type_alias_type` predicate function. ([PR #24](https://github.com/drivendataorg/typenames/pull/24), [Issue #19](https://github.com/drivendataorg/typenames/issues/19))
+  - Added `is_type_alias_type` predicate function.
+- Changed the type annotation of `GenericNode.origin` from `Any | None` to `Any`, since it is never `None`. ([PR #36](https://github.com/drivendataorg/typenames/pull/36))
 - Fixed incorrect `__version__` value. ([PR #20](https://github.com/drivendataorg/typenames/pull/20), [Issue #18](https://github.com/drivendataorg/typenames/issues/18))
 - Fixed missing config propagation for the parameters of a `Callable`. ([PR #23](https://github.com/drivendataorg/typenames/pull/23) thanks to [@nightcityblade](https://github.com/nightcityblade), [Issue #21](https://github.com/drivendataorg/typenames/issues/21))
-- Changed the build backend from hatchling to uv_build. The source distribution now contains only the package source, `pyproject.toml`, README, and LICENSE.
-- Removed the `tests` optional dependencies extra.
+- Changed the source distribution to contain only the package source, `pyproject.toml`, README, and LICENSE. It previously also included tests, docs, and other repository files. This is a result of changing the build backend from hatchling to uv_build. ([PR #29](https://github.com/drivendataorg/typenames/pull/29))
+- Removed the `tests` optional dependencies extra. ([PR #29](https://github.com/drivendataorg/typenames/pull/29))
 - Added static type checking with [pyrefly](https://github.com/facebook/pyrefly) and [ty](https://github.com/astral-sh/ty) in addition to mypy. ([PR #36](https://github.com/drivendataorg/typenames/pull/36))
-- Changed the type annotation of `GenericNode.origin` from `Any | None` to `Any`, since it is never `None`. ([PR #36](https://github.com/drivendataorg/typenames/pull/36))
 
 ## v2.1.0 (2025-09-15)
 
