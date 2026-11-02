@@ -11,6 +11,8 @@
 - Fixed missing config propagation for the parameters of a `Callable`. ([PR #23](https://github.com/drivendataorg/typenames/pull/23) thanks to [@nightcityblade](https://github.com/nightcityblade), [Issue #21](https://github.com/drivendataorg/typenames/issues/21))
 - Changed the build backend from hatchling to uv_build. The source distribution now contains only the package source, `pyproject.toml`, README, and LICENSE.
 - Removed the `tests` optional dependencies extra.
+- Added static type checking with [pyrefly](https://github.com/facebook/pyrefly) and [ty](https://github.com/astral-sh/ty) in addition to mypy. ([PR #36](https://github.com/drivendataorg/typenames/pull/36))
+- Changed the type annotation of `GenericNode.origin` from `Any | None` to `Any`, since it is never `None`. ([PR #36](https://github.com/drivendataorg/typenames/pull/36))
 
 ## v2.1.0 (2025-09-15)
 
