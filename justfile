@@ -1,7 +1,7 @@
 # Keep in sync with just-version in .github/workflows/*.yml
 set minimum-version := '1.55.0'
 
-python := "3.13"
+python := shell("cat .python-version")
 
 # Print this help documentation
 help:
@@ -11,39 +11,42 @@ help:
 sync:
     uv sync
 
-# Run linting
-lint:
-    uv run ruff format --check
-    uv run ruff check
+# Run linting (passes through args)
+lint *args:
+    uv run -- ruff format --check {{args}}
+    uv run -- ruff check {{args}}
 
-# Run formatting
-format:
-    uv run ruff format
-    uv run ruff check --fix
+# Run formatting (passes through args)
+format *args:
+    uv run -- ruff format {{args}}
+    uv run -- ruff check --fix --extend-fixable=F {{args}}
 
 # Audit GitHub Actions workflows with zizmor (passes through args)
 zizmor *args:
     uvx --exclude-newer "7 days" zizmor .github/ {{args}}
 
-# Run static typechecking
-typecheck:
-    uv run --python {{python}} --no-dev --group typecheck --isolated \
-        mypy src/typenames tests/typechecks.py --install-types --non-interactive
+# Run static typechecking (passes through args)
+[arg("python", long)]
+typecheck python=python *args:
+    uv run --python={{python}} --isolated --no-dev --group typecheck -- \
+        mypy --python-version={{python}} {{args}}
 
-# Run the tests
-test *args:
-    uv run --python {{python}} --isolated --no-editable --no-dev --group tests --reinstall \
+# Run the tests (passes through args)
+[arg("python", long)]
+test python=python *args:
+    uv run --python={{python}} --isolated --no-editable --no-dev --group tests --reinstall -- \
         python -I -m pytest {{args}}
 
 # Run all tests with Python version matrix
 test-all:
     for python in 3.10 3.11 3.12 3.13 3.14 3.15; do \
-        just python=$python test; \
+        just test --python=$python; \
     done
 
 # Generate notebook that inspects types
-inspect-types:
-    uv run --python {{python}} --isolated --only-group inspect-types \
+[arg("python", long)]
+inspect-types python=python:
+    uv run --python={{python}} --isolated --only-group inspect-types -- \
         jupyter nbconvert inspect_types/_inspect_types.ipynb \
             --to notebook \
             --output inspect_types_{{python}}.ipynb \
@@ -53,7 +56,7 @@ inspect-types:
 # Generate notebook that inspects types for all Python versions
 inspect-types-all:
     for python in 3.10 3.11 3.12 3.13 3.14 3.15; do \
-        just python=$python inspect-types; \
+        just inspect-types --python=$python; \
     done
 
 # Generate docs

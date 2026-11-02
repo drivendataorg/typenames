@@ -31,7 +31,7 @@ just test
 You can run the tests for a specific Python version with, for example:
 
 ```bash
-just python=3.12 test
+just test --python=3.12
 ```
 
 To run tests on all supported Python versions, run:
@@ -47,7 +47,7 @@ The directory [`inspect_types/`](./inspect_types/) contains Jupyter notebooks fo
 There are Just commands for regenerating these notebooks by running `jupyter nbconvert` in an isolated environment. To regenerate a notebook for a specific Python version, run for example:
 
 ```bash
-just python=3.12 inspect-types
+just inspect-types --python=3.12
 ```
 
 To regenerate notebooks for all supported Python versions, run:
