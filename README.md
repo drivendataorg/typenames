@@ -6,7 +6,7 @@
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/typenames)](https://pypi.org/project/typenames/)
 [![tests](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain)
 [![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/drivendataorg/typenames/badges/coverage.json)](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![mypy](https://img.shields.io/badge/mypy-checked-2A6DB2)](https://mypy-lang.org/)
 [![pyrefly](https://img.shields.io/endpoint?url=https://pyrefly.org/badge.json&color=c03f0c)](https://github.com/facebook/pyrefly)
 [![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
 
