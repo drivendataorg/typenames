@@ -7,7 +7,7 @@ module is only imported by tests that are themselves guarded on Python >= 3.12.
 
 It is also exempted from ruff's inferred `target-version` via
 `[tool.ruff.per-file-target-version]` in pyproject.toml, since ruff would otherwise parse
-it as Python 3.9 (from `requires-python`) and reject the `type` statement as invalid
+it as Python 3.10 (from `requires-python`) and reject the `type` statement as invalid
 syntax.
 """
 
