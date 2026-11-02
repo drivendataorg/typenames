@@ -77,7 +77,7 @@ inspect-types = [
 
 [tool.ruff]
 line-length = 99
-src = ["typenames", "tests"]
+src = ["src", "tests"]
 
 [tool.ruff.per-file-target-version]
 "tests/type_statement_fixtures.py" = "py312"
@@ -91,11 +91,10 @@ select = [
 unfixable = ["F"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["typenames"]
 force-sort-within-sections = true
 
 [tool.mypy]
-files = ["typenames", "tests/typechecks.py"]
+files = ["src/typenames", "tests/typechecks.py"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -107,6 +106,6 @@ source = ["typenames"]
 
 [tool.coverage.paths]
 typenames = [
-  "typenames/",
+  "src/typenames/",
   "*/site-packages/typenames/"
 ]

@@ -21,7 +21,7 @@ format:
 # Run static typechecking
 typecheck:
     uv run --python {{python}} --no-dev --group typecheck --isolated \
-        mypy typenames tests/typechecks.py --install-types --non-interactive
+        mypy src/typenames tests/typechecks.py --install-types --non-interactive
 
 # Run the tests
 test *args:
