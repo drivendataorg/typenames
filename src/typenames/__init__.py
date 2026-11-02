@@ -13,16 +13,15 @@ from typing import Annotated, Any, List, Optional, Union, get_args, get_origin
 __version__ = importlib.metadata.version("typenames")
 
 OR_OPERATOR_SUPPORTED = sys.version_info >= (3, 10)
-"""Flag for whether PEP 604's | operator (bitwise or) between types is supported."""
+"""(DEPRECATED) Flag for whether PEP 604's | operator (bitwise or) between types is supported.
+typenames no longer supports Python versions where this is false.
+"""
 
 
 # TypeVar for type annotations
 # Most typing special forms have type 'object'
 # There is a stalled proposal for TypeForm: https://github.com/python/mypy/issues/9773
-if sys.version_info >= (3, 10):
-    _TypeForm = typing.TypeVar("_TypeForm", bound=type | types.UnionType | object)
-else:
-    _TypeForm = typing.TypeVar("_TypeForm", bound=typing.Union[type, object])
+_TypeForm = typing.TypeVar("_TypeForm", bound=type | types.UnionType | object)
 
 
 # TypeAliasType for PEP 695 type aliases
@@ -418,7 +417,7 @@ def is_union_special_form(tp: _TypeForm) -> bool:
 
 def is_union_or_operator(tp: _TypeForm) -> bool:
     """Check if type annotation is a union and uses | operator (bitwise or)."""
-    return OR_OPERATOR_SUPPORTED and isinstance(tp, types.UnionType)
+    return isinstance(tp, types.UnionType)
 
 
 STANDARD_COLLECTION_TO_TYPING_ALIAS_MAPPING = {

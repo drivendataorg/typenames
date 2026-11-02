@@ -89,6 +89,11 @@ cases = [
     # typing.Annotated is available in Python 3.9, or backported with typing_extensions
     (Annotated[str, "some metadata"], "str"),
     (Annotated[str, object()], "str"),
+    # Python 3.10 adds union syntax with the | operator (bitwise or)
+    (int | str, "int | str"),
+    (int | None, "int | None"),
+    (None | int, "None | int"),
+    (int | None | str, "int | None | str"),
 ]
 
 if sys.version_info < (3, 14):
@@ -116,18 +121,6 @@ else:
             (typing.Optional[int], "int | None"),
             (typing.Optional[Annotated[str, "some metadata"]], "str | None"),
             (typing.Optional[Annotated[str, object()]], "str | None"),
-        ]
-    )
-
-if sys.version_info >= (3, 10):
-    # Python 3.10 adds union syntax with the | operator (bitwise or),
-    # typing.Concatenate, typing.ParamSpec, typing.TypeAlias
-    cases.extend(
-        [
-            (int | str, "int | str"),
-            (int | None, "int | None"),
-            (None | int, "None | int"),
-            (int | None | str, "int | None | str"),
         ]
     )
 
@@ -231,25 +224,22 @@ def test_union_syntax_or_operator():
     """Test that forcing optional_syntax='or_operator' results in ... | ...."""
     assert typenames(typing.Union[int, str], union_syntax="or_operator") == "int | str"
 
-    if sys.version_info >= (3, 10):
-        assert typenames(int | str, union_syntax="or_operator") == "int | str"
+    assert typenames(int | str, union_syntax="or_operator") == "int | str"
 
 
 def test_union_syntax_union_special_form():
     """Test that forcing optional_syntax='union_special_form' results in Union[...]"""
     assert typenames(typing.Union[int, str], union_syntax="special_form") == "Union[int, str]"
 
-    if sys.version_info >= (3, 10):
-        assert typenames(int | str, union_syntax="special_form") == "Union[int, str]"
+    assert typenames(int | str, union_syntax="special_form") == "Union[int, str]"
 
 
 def test_optional_syntax_or_operator():
     """Test that forcing optional_syntax='or_operator' results in ... | None."""
     assert typenames(typing.Optional[int], optional_syntax="or_operator") == "int | None"
 
-    if sys.version_info >= (3, 10):
-        assert typenames(int | None, union_syntax="or_operator") == "int | None"
-        assert typenames(None | int, union_syntax="or_operator") == "None | int"
+    assert typenames(int | None, union_syntax="or_operator") == "int | None"
+    assert typenames(None | int, union_syntax="or_operator") == "None | int"
 
 
 def test_optional_syntax_optional_special_form():
@@ -258,9 +248,8 @@ def test_optional_syntax_optional_special_form():
         typenames(typing.Optional[int], optional_syntax="optional_special_form") == "Optional[int]"
     )
 
-    if sys.version_info >= (3, 10):
-        assert typenames(int | None, optional_syntax="optional_special_form") == "Optional[int]"
-        assert typenames(None | int, optional_syntax="optional_special_form") == "Optional[int]"
+    assert typenames(int | None, optional_syntax="optional_special_form") == "Optional[int]"
+    assert typenames(None | int, optional_syntax="optional_special_form") == "Optional[int]"
 
 
 def test_optional_syntax_union_special_form():
@@ -269,9 +258,8 @@ def test_optional_syntax_union_special_form():
         typenames(typing.Optional[int], optional_syntax="union_special_form") == "Union[int, None]"
     )
 
-    if sys.version_info >= (3, 10):
-        assert typenames(int | None, optional_syntax="union_special_form") == "Union[int, None]"
-        assert typenames(None | int, optional_syntax="union_special_form") == "Union[None, int]"
+    assert typenames(int | None, optional_syntax="union_special_form") == "Union[int, None]"
+    assert typenames(None | int, optional_syntax="union_special_form") == "Union[None, int]"
 
 
 def test_optional_multiple_params():
@@ -282,35 +270,34 @@ def test_optional_multiple_params():
     else:
         assert typenames(typing.Optional[typing.Union[int, str]]) == "int | str | None"
 
-    if sys.version_info >= (3, 10):
-        if sys.version_info < (3, 14):
-            assert (
-                typenames(int | str | None, optional_syntax="optional_special_form")
-                == "Optional[Union[int, str]]"
-            )
-            assert (
-                typenames(int | None | str, optional_syntax="optional_special_form")
-                == "Optional[Union[int, str]]"
-            )
-        else:
-            assert (
-                typenames(int | str | None, optional_syntax="optional_special_form")
-                == "Optional[int | str]"
-            )
-            assert (
-                typenames(int | None | str, optional_syntax="optional_special_form")
-                == "Optional[int | str]"
-            )
-
-        # union_syntax='or_operator'
+    if sys.version_info < (3, 14):
         assert (
-            typenames(
-                int | None | str,
-                optional_syntax="optional_special_form",
-                union_syntax="or_operator",
-            )
+            typenames(int | str | None, optional_syntax="optional_special_form")
+            == "Optional[Union[int, str]]"
+        )
+        assert (
+            typenames(int | None | str, optional_syntax="optional_special_form")
+            == "Optional[Union[int, str]]"
+        )
+    else:
+        assert (
+            typenames(int | str | None, optional_syntax="optional_special_form")
             == "Optional[int | str]"
         )
+        assert (
+            typenames(int | None | str, optional_syntax="optional_special_form")
+            == "Optional[int | str]"
+        )
+
+    # union_syntax='or_operator'
+    assert (
+        typenames(
+            int | None | str,
+            optional_syntax="optional_special_form",
+            union_syntax="or_operator",
+        )
+        == "Optional[int | str]"
+    )
 
 
 def test_standard_collection_syntax_as_given():
@@ -405,34 +392,35 @@ def test_is_union_or_operator_for_typing_alias_cases(case):
         assert is_union_or_operator(case[0]) == case[1]
 
 
-if sys.version_info >= (3, 10):
-    # Python 3.10 adds | operator (bitwise or) for Union
-    is_union_or_operator_cases = [
-        (int | str, True),
-        (int | None, True),
-        (None | int, True),
-        (int | str | float, True),
-        (list[int] | tuple[str, float], True),
-        (list[int | str], False),
-    ]
+# Python 3.10 adds | operator (bitwise or) for Union
+is_union_or_operator_cases = [
+    (int | str, True),
+    (int | None, True),
+    (None | int, True),
+    (int | str | float, True),
+    (list[int] | tuple[str, float], True),
+    (list[int | str], False),
+]
 
-    @pytest.mark.parametrize(
-        "case",
-        is_union_or_operator_cases,
-        ids=[str(c[0]) for c in is_union_or_operator_cases],
-    )
-    def test_is_union_or_operator(case):
-        """Test that is_union_or_operator correctly identifies cases using | operator."""
-        assert is_union_or_operator(case[0]) == case[1]
 
-    @pytest.mark.parametrize(
-        "case",
-        is_union_or_operator_cases,
-        ids=[str(c[0]) for c in is_union_or_operator_cases],
-    )
-    def test_is_union_special_form_for_or_operator_cases(case):
-        """Test that is_union_special_form correctly returns False for all | operator cases."""
-        assert is_union_special_form(case[0]) is False
+@pytest.mark.parametrize(
+    "case",
+    is_union_or_operator_cases,
+    ids=[str(c[0]) for c in is_union_or_operator_cases],
+)
+def test_is_union_or_operator(case):
+    """Test that is_union_or_operator correctly identifies cases using | operator."""
+    assert is_union_or_operator(case[0]) == case[1]
+
+
+@pytest.mark.parametrize(
+    "case",
+    is_union_or_operator_cases,
+    ids=[str(c[0]) for c in is_union_or_operator_cases],
+)
+def test_is_union_special_form_for_or_operator_cases(case):
+    """Test that is_union_special_form correctly returns False for all | operator cases."""
+    assert is_union_special_form(case[0]) is False
 
 
 is_typing_module_collection_alias_cases = [
