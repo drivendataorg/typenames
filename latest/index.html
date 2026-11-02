@@ -627,7 +627,8 @@ You are not viewing the current stable version.
 <a href="https://pypi.org/project/typenames/"><img alt="PyPI" src="https://img.shields.io/pypi/v/typenames.svg" /></a>
 <a href="https://github.com/conda-forge/typenames-feedstock"><img alt="conda-forge" src="https://img.shields.io/conda/vn/conda-forge/typenames.svg" /></a>
 <a href="https://pypi.org/project/typenames/"><img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/typenames" /></a>
-<a href="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain"><img alt="tests" src="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml/badge.svg?branch=main" /></a></p>
+<a href="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain"><img alt="tests" src="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml/badge.svg?branch=main" /></a>
+<a href="https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain"><img alt="coverage" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/drivendataorg/typenames/badges/coverage.json" /></a></p>
 <p><strong>typenames</strong> is a configurable Python library for creating string representations of type annotations. By default, it produces compact representations by removing standard library module names. Configurable options include standardizing on <code>|</code> operator syntax for unions or standard collections classes for generics.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typenames</span><span class="w"> </span><span class="kn">import</span> <span class="n">typenames</span>
@@ -728,10 +729,6 @@ You are not viewing the current stable version.
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Runtime use of the <code>|</code> operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la <a href="https://peps.python.org/pep-0563/">PEP 563</a> with <code>from __future__ import__annotations__</code>. Support for the <code>|</code> operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
 <p>In Python 3.14, the <code>typing.Union</code> special form and the <code>types.Union</code> type (produced by the <code>|</code> operator) have been <a href="https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union">unified into a single implementation</a>. This means that both will always be rendered with the <code>|</code> operator when using <code>as_given</code>, as their created instances are no longer distinguishable.</p>
 </div>
 <div class="admonition important">
@@ -746,10 +743,6 @@ You are not viewing the current stable version.
 <li><strong><code>"union_special_form"</code></strong>: render all optional types using the <code>typing.Optional</code> special form</li>
 <li><strong><code>"optional_special_form"</code></strong>: render all optional types using the <code>typing.Optional</code> special form</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Runtime use of the <code>|</code> operator between types is new in Python 3.10. To use in earlier versions of Python, you will need to use postponed evaluation of annotations à la <a href="https://peps.python.org/pep-0563/">PEP 563</a> with <code>from __future__ import__annotations__</code>. Support for the <code>|</code> operator is only a limitation on providing type annotation inputs to typenames, and not a limitation on output rendering.</p>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>In Python 3.14, the <code>typing.Optional</code> special form no longer produces a <code>typing.Optional</code> type object; instead, it produces a <code>Union</code> object. Additionally, the <code>typing.Union</code> special form and the <code>types.Union</code> type (produced by the <code>|</code> operator) have been <a href="https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-typing-union">unified into a single implementation</a>. This means that all syntaxes for optional types will be rendered with the <code>|</code> operator when using <code>as_given</code>, as their created instances are no longer distinguishable.</p>
