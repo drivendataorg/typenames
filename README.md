@@ -5,6 +5,7 @@
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/typenames.svg)](https://github.com/conda-forge/typenames-feedstock)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/typenames)](https://pypi.org/project/typenames/)
 [![tests](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain)
+[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/drivendataorg/typenames/badges/coverage.json)](https://github.com/drivendataorg/typenames/actions/workflows/tests.yml?query=branch%3Amain)
 
 **typenames** is a configurable Python library for creating string representations of type annotations. By default, it produces compact representations by removing standard library module names. Configurable options include standardizing on `|` operator syntax for unions or standard collections classes for generics.
 
