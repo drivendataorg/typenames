@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -2158,12 +2158,6 @@ name = "typenames"
 version = "2.2.0"
 source = { editable = "." }
 
-[package.optional-dependencies]
-tests = [
-    { name = "pytest" },
-    { name = "typing-extensions" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "ipython", version = "8.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
@@ -2198,19 +2192,15 @@ lint = [
 ]
 tests = [
     { name = "coverage" },
+    { name = "pytest" },
     { name = "pytest-cov" },
-    { name = "typenames", extra = ["tests"] },
+    { name = "typing-extensions" },
 ]
 typecheck = [
     { name = "mypy" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "pytest", marker = "extra == 'tests'", specifier = ">=6" },
-    { name = "typing-extensions", marker = "extra == 'tests'", specifier = ">=4.6.0" },
-]
-provides-extras = ["tests"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -2242,8 +2232,9 @@ inspect-types = [
 lint = [{ name = "ruff" }]
 tests = [
     { name = "coverage" },
+    { name = "pytest", specifier = ">=6" },
     { name = "pytest-cov" },
-    { name = "typenames", extras = ["tests"] },
+    { name = "typing-extensions", specifier = ">=4.6.0" },
 ]
 typecheck = [{ name = "mypy" }]
 

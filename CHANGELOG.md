@@ -7,6 +7,8 @@
 - Added `is_type_alias_type` predicate function. ([PR #24](https://github.com/drivendataorg/typenames/pull/24), [Issue #19](https://github.com/drivendataorg/typenames/issues/19))
 - Fixed incorrect `__version__` value. ([PR #20](https://github.com/drivendataorg/typenames/pull/20), [Issue #18](https://github.com/drivendataorg/typenames/issues/18))
 - Fixed missing config propagation for the parameters of a `Callable`. ([PR #23](https://github.com/drivendataorg/typenames/pull/23) thanks to [@nightcityblade](https://github.com/nightcityblade), [Issue #21](https://github.com/drivendataorg/typenames/issues/21))
+- Changed the build backend from hatchling to uv_build. The source distribution now contains only the package source, `pyproject.toml`, README, and LICENSE.
+- Removed the `tests` optional dependencies extra.
 
 ## v2.1.0 (2025-09-15)
 
