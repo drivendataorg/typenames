@@ -37,9 +37,9 @@ build-backend = "uv_build"
 dev = [
   { include-group = "lint" },
   { include-group = "docs" },
+  { include-group = "vspect" },
   "ipython",
   "reprexlite",
-  "vspect",
 ]
 lint = [
   "ruff",
@@ -65,6 +65,9 @@ docs = [
 inspect-types = [
   "ipykernel",
   "nbconvert",
+]
+vspect = [
+  "vspect",
 ]
 
 ## TOOLS ##

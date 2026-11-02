@@ -21,10 +21,18 @@ on:
         description: Version format
         default: "v{major_minor_version}"
 
+concurrency:
+  group: docs-publish
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   build:
     name: Build docs
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Push to the gh-pages branch
 
     steps:
       - name: Fail if deploying as latest but marked as stable
@@ -33,16 +41,13 @@ jobs:
           echo "Error: Cannot deploy as 'latest' when 'is-stable' is true."
           exit 1
 
-      - uses: actions/checkout@v4
-
-      - uses: extractions/setup-just@v2
-
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          enable-cache: true
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
           cache-suffix: "docs"
-          cache-dependency-glob: |
-            uv.lock
 
       - name: Set git user to github-actions[bot]
         run: |
@@ -57,29 +62,39 @@ jobs:
         if: github.event.inputs.deploy-as == 'latest' || github.event_name == 'push'
         working-directory: docs/
         run: |
-          uv run mike deploy --push latest --title=latest
+          uv run mike deploy latest --title=latest
 
       - name: Get version tag
         id: get-version-tag
         if: github.event.inputs.deploy-as == 'version'
         run: |
-          VERSION_TAG=$(uv run vspect read . "${{ github.event.inputs.version-format }}")
-          echo "VERSION_TAG=${VERSION_TAG}" | tee -a $GITHUB_OUTPUT
+          VERSION_TAG=$(uv run vspect read . "${VERSION_FORMAT}")
+          echo "VERSION_TAG=${VERSION_TAG}" | tee -a "$GITHUB_OUTPUT"
+        env:
+          VERSION_FORMAT: ${{ inputs.version-format }}
 
       - name: Deploy as version
         if: github.event.inputs.deploy-as == 'version'
         working-directory: docs/
         run: |
           TITLE=$(uv run vspect read .. "v{version}")
-          TAG=${{ steps.get-version-tag.outputs.VERSION_TAG }}
-          uv run mike deploy --push $TAG --title="${TITLE}"
+          uv run mike deploy "$TAG" --title="${TITLE}"
+        env:
+          TAG: ${{ steps.get-version-tag.outputs.VERSION_TAG }}
 
       - name: Assign stable alias
         if: github.event.inputs.is-stable == 'true'
         working-directory: docs/
         run: |
-          TAG=${{ steps.get-version-tag.outputs.VERSION_TAG }}
-          uv run mike alias --push --update-aliases $TAG stable
+          uv run mike alias --update-aliases "$TAG" stable
+        env:
+          TAG: ${{ steps.get-version-tag.outputs.VERSION_TAG }}
+
+      - name: Push gh-pages branch
+        run: |
+          git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          TOKEN: ${{ github.token }}
 
   publish:
     name: Publish docs
@@ -89,4 +104,6 @@ jobs:
     steps:
       - name: Trigger build on Render
         run: |
-          curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          curl "${RENDER_DEPLOY_HOOK_URL}"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
